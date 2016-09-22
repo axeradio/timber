@@ -1,0 +1,56 @@
+<div class="tablenav">
+    <form method="get" style="float: left;">
+<?php if ($admin): ?>
+        <input type="hidden" name="page" value="timber_songs" />
+<?php endif; ?>
+        <label for="show-filter">Show:</label>
+        <select id="show-filter" name="show">
+            <option value="0" selected="selected">All shows</option>
+<?php foreach ($shows as $show): ?>
+            <option value="<?php echo $show->ID; ?>"<?php if ($show->ID == $show): ?> selected="selected"<?php endif; ?>><?php echo
+            htmlentities
+            ($show->show_name); ?></option>
+<?php endforeach; ?>
+        </select>
+        <input type="submit" value="Filter" />
+    </form>
+    <div class="tablenav-pages">
+        <span class="displaying-num">Showing <?php echo(50 * ($page - 1) + 1); ?>-<?php echo(count($songs) + (50 * ($page - 1))); ?> of <?php echo $song_count; ?>.</span>
+        <span class="pagination-links"><?php echo $page_links; ?></span>
+    </div>
+</div>
+<table class="widefat">
+    <thead>
+    <tr>
+        <th><?php _e('Artist'); ?></th>
+        <th><?php _e('Song'); ?></th>
+        <th><?php _e('Show'); ?></th>
+        <th><?php _e('Time'); ?></th>
+<?php if ($admin): ?>
+        <th>Delete</th>
+<?php endif; ?>
+    </tr>
+    </thead>
+    <tbody>
+    <?php
+    $previous_day = null;
+    foreach($songs as $song):
+        $day = substr($song->song_date, 8, 2);
+        if ($previous_day !== $day): ?>
+        <tr>
+            <td colspan="5" class="day-break"><strong>Songs played on <?php echo date('Y-m-d', strtotime($song->song_date)); ?></strong></td>
+        </tr>
+            <?php endif; ?>
+    <tr>
+        <td class="editable" id="song_artist-<?php echo $song->ID; ?>"><?php echo $song->song_artist; ?></td>
+        <td class="editable" id="song_name-<?php echo $song->ID; ?>"><?php echo $song->song_name; ?></td>
+        <td><?php echo $song->show_name; ?></td>
+        <td<?php if ($admin): ?> class="editable"<?php endif; ?> id="song_date-<?php echo $song->ID; ?>"><?php echo $song->song_date; ?></td>
+<?php if ($admin): ?>
+        <td><form action="<?php echo htmlentities($_SERVER['REQUEST_URI']); ?>" method="post"><input type="hidden" name="action" value="delete" /><input type="hidden" name="ID" value="<?php echo($song->ID); ?>" /><input type="submit" title="<?php _e('Delete this item'); ?>" value="<?php _e('Delete'); ?>"  class="button-secondary" /></form></td>
+<?php endif; ?>
+    </tr>
+        <?php $previous_day = $day; ?>
+        <?php endforeach; ?>
+    </tbody>
+</table>

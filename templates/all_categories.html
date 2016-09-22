@@ -1,0 +1,31 @@
+<div class="wrap">
+    <h2><?php _e('Genres'); ?> <a href="?page=timber_admin_category&action=add" class="add-new-h2"><?php _e('Add New'); ?></a></h2>
+    <table class="widefat">
+        <thead>
+            <tr>
+                <th><?php _e('Genres Title'); ?></th>
+                <th><?php _e('Color'); ?></th>
+            </tr>
+        </thead>
+        <tbody>
+<?php foreach($categories as $category): ?>
+            <tr>
+                <td><a href="?page=timber_admin_category&action=edit&id=<?php echo $category->ID; ?>"><strong><?php echo $category->category_name; ?></strong></a>
+                    <div class="row-actions">
+                        <span class="edit">
+                            <a href="?page=timber_admin_category&action=edit&id=<?php echo $category->ID; ?>" title="<?php _e('Edit this item'); ?>"><?php _e('Edit'); ?></a>
+                        </span>
+                        |
+                        <span class="trash">
+                            <a href="?page=timber_admin_category&action=delete&id=<?php echo $category->ID; ?>" title="<?php _e('Delete this item'); ?>"><?php _e('Delete'); ?></a>
+                        </span>
+                </td>
+                <td style="background-color: #<?php
+                echo(str_pad(dechex($category->category_color),
+                    6, '0', STR_PAD_LEFT));
+                ?>; width: 64px;">&nbsp;</td>
+            </tr>
+<?php endforeach; ?>
+        </tbody>
+    </table>
+</div>

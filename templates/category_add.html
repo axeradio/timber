@@ -1,0 +1,35 @@
+<div class="wrap">
+<?php if (!empty($message)): ?>
+    <div id="message" class="updated"><p><?php echo $message; ?></p></div>
+<?php endif; ?>
+    <h2><?php _e('Add Genre'); ?></h2>
+    <form action="<?php echo($_SERVER['REQUEST_URI']); ?>" method="post">
+        <table class="form-table">
+            <tr>
+                <th><label for="category_name"><?php _e('Genre name:'); ?></label></th>
+                <td><input type="text" name="category_name" id="category_name" /></td>
+            </tr>
+            <tr>
+                <th><label for="category_color"><?php _e('Genre color:'); ?></label></th>
+                <td><input type="text" name="category_color" id="category_color" value="#ffffff" />
+                <div id="colorpicker"></div></td>
+            </tr>
+        </table>
+
+        <input type="hidden" name="action" value="add" />
+
+        <p class="submit"><input type="submit" name="submit" id="submit" class="button-primary" value="<?php _e('Add genre'); ?>" /></p>
+    </form>
+</div>
+<script type="text/javascript">
+jQuery(document).ready(function()
+{
+    jQuery('#colorpicker')
+            .hide()
+            .farbtastic("#category_color");
+    jQuery("#category_color").click(function()
+    {
+        jQuery('#colorpicker').slideToggle();
+    });
+});
+</script>

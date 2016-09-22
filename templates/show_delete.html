@@ -1,0 +1,15 @@
+<div class="wrap">
+<?php if (!empty($message)): ?>
+    <div id="message" class="updated"><p><?php echo $message; ?></p></div>
+<?php endif; ?>
+    <h2><?php _e('Archive Show'); ?></h2>
+    <form action="<?php echo($_SERVER['REQUEST_URI']); ?>" method="post">
+        <input type="hidden" name="action" value="delete" />
+        <input type="hidden" name="ID" value="<?php echo $show->ID; ?>" />
+        
+        <p><strong><?php _e('Warning:'); ?></strong> <?php _e('This will archive the show. No going back!'); ?></p>
+
+        <p class="submit"><input type="submit" name="submit" id="submit" class="button-primary" value="<?php _e('Archive show'); ?>" />
+        <a href="?page=timber_all_categories" class="button-secondary"><?php _e('Don\'t archive show'); ?></a></p>
+    </form>
+</div>

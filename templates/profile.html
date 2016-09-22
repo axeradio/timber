@@ -1,0 +1,18 @@
+<h3><?php _e('Timber'); ?></h3>
+<table class="form-table">
+    <tr>
+        <th><label for="timber_log_form_field_ordering">Log form field ordering</label></th>
+        <td>
+            <select id="timber_log_form_field_ordering" name="timber_log_form_field_ordering">
+                <option value="name-artist"<?php if ($ordering !== 'artist-name'): ?> selected="selected"<?php endif; ?>>Name/Artist</option>
+                <option value="artist-name"<?php if ($ordering === 'artist-name'): ?> selected="selected"<?php endif; ?>>Artist/Name</option>
+            </select>
+        </td>
+    </tr>
+<?php if (is_admin()): ?>
+    <tr>
+        <th><label for="timber_instantaneous_stats">Display instantaneous stats</label></th>
+        <td><input id="timber_instantaneous_stats" name="timber_instantaneous_stats" type="checkbox"<?php if ($instantaneous_stats): ?> checked="checked"<?php endif; ?> />
+    </tr>
+<?php endif; ?>
+</table>

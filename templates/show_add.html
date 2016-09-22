@@ -1,0 +1,34 @@
+<div class="wrap">
+    <?php if (!empty($message)): ?>
+    <div id="message" class="updated"><p><?php echo $message; ?></p></div>
+    <?php endif; ?>
+    <h2><?php _e('Add Show'); ?></h2>
+    <form action="<?php echo($_SERVER['REQUEST_URI']); ?>" method="post">
+        <table class="form-table">
+            <tr>
+                <th><label for="show_name"><?php _e('Show name:'); ?></label></th>
+                <td><input type="text" name="show_name" id="show_name" /></td>
+            </tr>
+            <tr>
+                <th><label for="show_category"><?php _e('Show genre:'); ?></label></th>
+                <td><select name="show_category" id="show_category">
+<?php foreach($categories as $category): ?>
+                    <option value="<?php echo($category->ID); ?>"><?php echo $category->category_name; ?></option>
+<?php endforeach; ?>
+                </select></td>
+            </tr>
+            <tr>
+                <th><label for="show_description"><?php _e('Show description:'); ?></label></th>
+                <td><textarea name="show_description" id="show_description" cols="80" rows="6"><?php echo $show->show_description; ?></textarea></td>
+            </tr>
+            <tr>
+                <th><label for="show_facebook_url"><?php _e('Show Facebook URL:'); ?></label></th>
+                <td><input type="text" name="show_facebook_url" id="show_facebook_url" style="width: 30em;" /></td>
+            </tr>
+        </table>
+
+        <input type="hidden" name="action" value="add" />
+
+        <p class="submit"><input type="submit" name="submit" id="submit" class="button-primary" value="<?php _e('Add show'); ?>" /></p>
+    </form>
+</div>

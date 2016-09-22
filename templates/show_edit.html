@@ -1,0 +1,142 @@
+<div class="wrap">
+<?php if (!empty($message)): ?>
+    <div id="message" class="updated"><p><?php echo $message; ?></p></div>
+<?php endif; ?>
+    <h2 id="edit"><?php _e('Edit Show'); ?></h2>
+    <form action="<?php echo($_SERVER['REQUEST_URI']); ?>" method="post">
+        <table class="form-table">
+            <tr>
+                <th><label for="show_name"><?php _e('Show name:'); ?></label></th>
+                <td><input type="text" name="show_name" id="show_name" value="<?php echo($show->show_name); ?>" /></td>
+            </tr>
+            <tr>
+                <th><label for="show_category"><?php _e('Show genre:'); ?></label></th>
+                <td><select name="show_category" id="show_category">
+<?php foreach($categories as $category): ?>
+                    <option value="<?php echo($category->ID); ?>"<?php if ($category->ID == $show->show_category): ?> selected="selected"<?php endif; ?>><?php echo $category->category_name; ?></option>
+<?php endforeach; ?>
+                </select></td>
+            </tr>
+            <tr>
+                <th><label for="show_description"><?php _e('Show description:'); ?></label></th>
+                <td><textarea name="show_description" id="show_description" cols="80" rows="6"><?php echo $show->show_description; ?></textarea></td>
+            </tr>
+            <tr>
+                <th><label for="show_facebook_url"><?php _e('Show Facebook URL:'); ?></label></th>
+                <td><input type="text" name="show_facebook_url" id="show_facebook_url" style="width: 30em;" value="<?php echo $show->show_facebook_url; ?>" /></td>
+            </tr>
+        </table>
+
+        <input type="hidden" name="action" value="edit" />
+        <input type="hidden" name="ID" value="<?php echo($show->ID); ?>" />
+
+        <p class="submit"><input type="submit" name="submit" id="submit" class="button-primary" value="<?php _e('Edit show'); ?>" /></p>
+    </form>
+
+    <h3 id="timeslots"><?php _e('Timeslots'); ?></h3>
+    <table class="widefat">
+        <thead>
+            <tr>
+                <th>Day</th>
+                <th>Start time</th>
+                <th>End time</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+<?php foreach($show->timeslots as $timeslot): ?>
+            <tr>
+                <td><?php echo(jddayofweek($timeslot->timeslot_day, 1)); ?></td>
+                <td><?php echo($timeslot->timeslot_start); ?></td>
+                <td><?php echo($timeslot->timeslot_end); ?></td>
+                <td><form action="<?php echo($_SERVER['REQUEST_URI']); ?>" method="post"><input type="hidden" name="action" value="timeslot_delete" /><input type="hidden" name="ID" value="<?php echo($timeslot->ID); ?>" /><input type="submit" title="<?php _e('Delete this item'); ?>" value="<?php _e('Delete'); ?>"  class="button-secondary" /></form></td>
+            </tr>
+<?php endforeach; ?>
+        </tbody>
+    </table>
+    <form action="<?php echo($_SERVER['REQUEST_URI']); ?>#timeslots" method="post">
+        <label for="day">Day:</label>
+        <select name="day" id="day">
+<?php
+
+$start = get_option('timber_week_start');
+$end = get_option('timber_week_end');
+var_dump($start);
+
+for ($day = $start; $day <= $end; $day++): ?>
+            <option value="<?php echo($day); ?>"><?php echo(jddayofweek($day, 1)); ?></option>
+<?php endfor; ?>
+        </select>
+        <label for="start">Start time:</label>
+        <select name="start" id="start">
+<?php
+
+$start = get_option('timber_day_start_hour');
+$end = get_option('timber_day_end_hour');
+var_dump($start);
+
+for ($hour = $start; $hour <= $end; $hour++): ?>
+            <option value="<?php echo($hour); ?>"><?php echo($hour); ?></option>
+<?php endfor; ?>
+        </select>
+        :
+        <select name="start_offset" id="start_offset">
+            <option value="0">00</option>
+            <option value="30">30</option>
+        </select>
+        <label for="end">End time:</label>
+        <select name="end" id="end">
+<?php
+
+$start = get_option('timber_day_start_hour');
+$end = get_option('timber_day_end_hour');
+var_dump($start);
+
+for ($hour = $start; $hour <= $end; $hour++): ?>
+            <option value="<?php echo($hour); ?>"><?php echo($hour); ?></option>
+<?php endfor; ?>
+        </select>
+        :
+        <select name="end_offset" id="end_offset">
+            <option value="0">00</option>
+            <option value="30">30</option>
+        </select>
+
+        <input type="hidden" name="action" value="timeslot_add" />
+        <input type="hidden" name="ID" value="<?php echo($show->ID); ?>" />
+
+        <input type="submit" class="button-primary" value="<?php _e('Add timeslot'); ?>" />
+    </form>
+
+    <h3 id="broadcasters"><?php _e('Broadcasters'); ?></h3>
+    <table class="widefat">
+        <thead>
+            <tr>
+                <th>Broadcaster</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+<?php foreach($show->broadcasters as $broadcaster): ?>
+            <tr>
+                <td><?php echo($broadcaster->display_name); ?></td>
+                <td>
+                    <form action="<?php echo($_SERVER['REQUEST_URI']); ?>" method="post">
+                        <input type="hidden" name="action" value="user_delete" /><input type="hidden" name="show" value="<?php echo($show->ID); ?>" />
+                        <input type="hidden" name="ID" value="<?php echo($broadcaster->ID); ?>" />
+                        <input type="submit" title="<?php _e('Delete this item'); ?>" value="<?php _e('Delete'); ?>" class="button-secondary" />
+                    </form>
+                </td>
+            </tr>
+<?php endforeach; ?>
+        </tbody>
+    </table>
+    <form action="<?php echo($_SERVER['REQUEST_URI']); ?>" method="post">
+        <?php wp_dropdown_users(array('show_option_all', 'who' => 'authors')); ?>
+
+        <input type="hidden" name="action" value="user_add" />
+        <input type="hidden" name="ID" value="<?php echo $show->ID; ?>" />
+
+        <input type="submit" class="button-primary" value="<?php _e('Add user'); ?>" />
+    </form>
+</div>

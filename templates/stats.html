@@ -1,0 +1,82 @@
+<div class="wrap">
+    <h2><?php _e('Listenership'); ?></h2>
+    <h3><?php _e('24-Hour Rolling History'); ?></h3>
+<?php if (!$instantaneous_stats): ?>
+    <p><strong><?php _e('Note:'); ?></strong> <?php _e('There is a one-hour delay in data appearing here.'); ?></p>
+<?php endif; ?>
+    <div id="chart-day-history" style="height: 256px;"></div>
+
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+        google.load('visualization', '1.0', {'packages':['corechart']});
+        google.setOnLoadCallback(drawCharts);
+
+        function drawCharts()
+        {
+            drawDayHistory();
+        }
+
+        function drawDayHistory()
+        {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', '<?php _e('Time'); ?>');
+            data.addColumn('number', '<?php _e('Listeners'); ?>');
+            data.addRows([
+            <?php $first = true; foreach($day_history as $record): ?><?php if (!$first): echo ','; else: $first = false; endif; ?>
+                ['<?php echo date('H:i', strtotime($record->date)); ?>', <?php echo $record->clients; ?>]
+            <?php endforeach; ?>
+            ]);
+
+            var chart = new google.visualization.LineChart(document.getElementById('chart-day-history'));
+            chart.draw(data);
+        }
+    </script>
+    <div style="float: left; width: 45%;">
+        <h3>Overall Top <?php echo count($top_artists); ?> Artists for <?php echo date('F'); ?></h3>
+        <table class="widefat">
+            <thead>
+            <tr>
+                <th><?php _e('Position'); ?></th>
+                <th><?php _e('Artist'); ?></th>
+                <th><?php _e('Plays'); ?></th>
+                <th><?php _e('Last Played'); ?></th>
+            </tr>
+            </thead>
+            <tbody>
+<?php $i = 1; foreach($top_artists as $song): ?>
+            <tr>
+                <td><?php echo $i++; ?></td>
+                <td><?php echo $song->song_artist; ?></td>
+                <td><?php echo $song->plays; ?></td>
+                <td><?php echo $song->song_date; ?></td>
+            </tr>
+<?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <div style="float: left; margin-left: 1em; width: 45%;">
+    <h3>Overall Top <?php echo count($top_songs); ?> Songs for <?php echo date('F'); ?></h3>
+        <table class="widefat">
+            <thead>
+            <tr>
+                <th><?php _e('Position'); ?></th>
+                <th><?php _e('Artist'); ?></th>
+                <th><?php _e('Song'); ?></th>
+                <th><?php _e('Plays'); ?></th>
+                <th><?php _e('Last Played'); ?></th>
+            </tr>
+            </thead>
+            <tbody>
+<?php $i = 1; foreach($top_songs as $song): ?>
+            <tr>
+                <td><?php echo $i++; ?></td>
+                <td><?php echo $song->song_artist; ?></td>
+                <td><?php echo $song->song_name; ?></td>
+                <td><?php echo $song->plays; ?></td>
+                <td><?php echo $song->song_date; ?></td>
+            </tr>
+<?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>

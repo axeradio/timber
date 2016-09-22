@@ -1,0 +1,79 @@
+<div class="wrap">
+    <h2><?php _e('Charts'); ?></h2>
+    <form method="get">
+        <input type="hidden" name="page" value="timber_charts">
+        <p>I want a list of the top
+            <select name="size">
+<?php foreach (array(10, 25, 50, 100, 250) as $size_option): ?>
+                <option value="<?= $size_option ?>"
+                    <?php if ($size_option == $size): ?>
+                        selected="selected"
+                    <?php endif; ?>>
+                    <?= $size_option ?>
+                </option>
+<?php endforeach; ?>
+            </select>
+            <select name="datatype">
+<?php foreach (array('songs', 'artists') as $datatype_option): ?>
+                <option value="<?= $datatype_option ?>"
+                    <?php if ($datatype_option == $datatype): ?>
+                        selected="selected"
+                    <?php endif; ?>>
+                    <?= $datatype_option ?>
+                </option>
+<?php endforeach; ?>
+            </select>
+            from
+            <input type="date" name="from" value="<?= $from ?>">
+            to
+            <input type="date" name="to" value="<?= $to ?>">
+            as
+            <select name="output">
+<?php foreach (array('html' => 'a table on the page', 'csv' => 'CSV') as $output_value => $output_label): ?>
+                <option value="<?= $output_value ?>"
+                    <?php if ($output_value == $output): ?>
+                        selected="selected"
+                    <?php endif; ?>>
+                    <?= $output_label ?>
+                </option>
+<?php endforeach; ?>
+            </select>.
+        </p>
+        <input class="button-primary" type="submit" value="Do it!">
+    </form>
+    <h3>Top <?php echo count($results); ?> <?= ucfirst($datatype) ?> for <?= $from ?>&ndash;<?= $to ?></h3>
+<?php if ($output == 'html'): ?>
+    <table class="widefat">
+        <thead>
+        <tr>
+            <th><?php _e('Position'); ?></th>
+            <th><?php _e('Artist'); ?></th>
+<?php if ($datatype == 'songs'): ?>
+            <th><?php _e('Song'); ?></th>
+<?php endif; ?>
+            <th><?php _e('Plays'); ?></th>
+            <th><?php _e('Last Played'); ?></th>
+        </tr>
+        </thead>
+        <tbody>
+<?php $i = 1; foreach($results as $song): ?>
+        <tr>
+            <td><?php echo $i++; ?></td>
+            <td><?php echo $song->song_artist; ?></td>
+<?php if ($datatype == 'songs'): ?>
+            <td><?php echo $song->song_name; ?></td>
+<?php endif; ?>
+            <td><?php echo $song->plays; ?></td>
+            <td><?php echo $song->song_date; ?></td>
+        </tr>
+<?php endforeach; ?>
+        </tbody>
+    </table>
+<?php elseif ($output == 'csv'): ?>
+    <textarea>
+<?php $i = 1; foreach($results as $song): ?>
+<?= $i++ ?>,"<?= $song->song_artist ?>"<?php if ($datatype == 'songs'): ?>,"<?= $song->song_name ?>"<?php endif; ?>,<?= $song->plays ?>,"<?= $song->song_date ?>"
+<?php endforeach; ?>
+    </textarea>
+<?php endif; ?>
+</div>

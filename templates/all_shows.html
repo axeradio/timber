@@ -1,0 +1,82 @@
+<div class="wrap">
+    <h2><?php _e('Shows'); ?> <a href="?page=timber_admin_show&action=add" class="add-new-h2"><?php _e('Add New'); ?></a></h2>
+    <table class="widefat">
+        <thead>
+            <tr>
+                <th><?php _e('Show Title'); ?></th>
+                <th><?php _e('Genre'); ?></th>
+                <th><?php _e('Songs Played'); ?></th>
+                <th><?php _e('Broadcasters'); ?></th>
+                <th><?php _e('Timeslots'); ?></th>
+            </tr>
+        </thead>
+        <tbody>
+<?php foreach($shows as $show): ?>
+            <tr>
+                <td><a href="?page=timber_admin_show&action=edit&id=<?php echo $show->ID; ?>"><strong><?php echo $show->show_name; ?></strong></a>
+                    <div class="row-actions">
+                        <span class="edit"><a href="?page=timber_admin_show&action=edit&id=<?php echo $show->ID; ?>" title="<?php _e('Edit this item'); ?>"><?php _e('Edit'); ?></a></span>
+                        |
+                        <span class="trash"><a href="?page=timber_admin_show&action=delete&id=<?php echo $show->ID; ?>" title="<?php _e('Archive this item'); ?>"><?php _e('Archive'); ?></a></div>
+                </td>
+                <td><?php echo $show->category_name; ?></td>
+                <td><?php echo $show->week_count; ?>/<?php echo $show->song_count; ?></td>
+                <td><?php
+
+$first = true;
+foreach($show->broadcasters as $broadcaster)
+{
+    if (!$first) echo '<br />';
+    echo $broadcaster->display_name;
+    $first = false;
+}
+
+?></td>
+                <td><?php
+
+$first = true;
+foreach($show->timeslots as $timeslot)
+{
+    if (!$first) echo '<br />';
+    echo(jddayofweek($timeslot->timeslot_day, 2) . ' '
+        . substr($timeslot->timeslot_start, 0, 5) . '&ndash;'
+        . substr($timeslot->timeslot_end, 0, 5));
+    $first = false;
+}
+
+?></td>
+            </tr>
+<?php endforeach; ?>
+        </tbody>
+    </table>
+    <h3><?php _e('Schedule'); ?></h3>
+    <?php echo $schedule; ?>
+    <p><label for="schedule-source">Copy and paste schedule:</label></p>
+    <textarea id="schedule-source" cols="40" rows="2" onclick="this.select();"><?php echo $schedule; ?>
+<h3>Shows</h3>
+<?php $first = true; foreach ($shows as $show): ?>
+<?php if (count($show->timeslots) > 0): ?>
+<?php if (!$first): ?><hr /><?php endif; $first = false; ?>
+<h4 id="<?php echo preg_replace('/[^a-z]/', '', strtolower($show->show_name)); ?>"><?php echo $show->show_name; ?>
+<?php if (!empty($show->show_facebook_url)): ?>
+ <div class="fb-like" data-href="<?php echo $show->show_facebook_url; ?>" data-layout="button_count" data-send="false" data-show-faces="false"></div>
+<?php endif;?>
+</h4>
+<p class="show meta"><?php
+$first_timeslot = true;
+foreach($show->timeslots as $timeslot)
+{
+    if (!$first_timeslot) echo ', ';
+    echo(jddayofweek($timeslot->timeslot_day, 2) . ' '
+        . substr($timeslot->timeslot_start, 0, 5) . '&ndash;'
+        . substr($timeslot->timeslot_end, 0, 5));
+    $first_timeslot = false;
+}
+?></p>
+<?php if (!empty($show->show_description)): ?>
+<p><?php echo $show->show_description; ?></p>
+<?php endif; ?>
+<?php endif; ?>
+<?php endforeach; ?>
+</textarea>
+</div>

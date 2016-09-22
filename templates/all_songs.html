@@ -1,0 +1,46 @@
+<div class="wrap">
+<?php if (!empty($message)): ?>
+    <div id="message" class="updated"><p><?php echo $message; ?></p></div>
+<?php endif; ?>
+    <h2><?php _e('Songs'); ?></h2>
+    <form action="<?php echo($_SERVER['REQUEST_URI']); ?>" method="post">
+        <table class="form-table">
+            <tbody>
+<?php if ($ordering === 'artist-name'): ?>
+                <tr>
+                    <th><label for="song_artist"><?php _e('Artist:'); ?></label></th>
+                    <td><input type="text" name="song_artist" id="song_artist" /></td>
+                </tr>
+                <tr>
+                    <th><label for="song_name"><?php _e('Name:'); ?></label></th>
+                    <td><input type="text" name="song_name" id="song_name" /></td>
+                </tr>
+<?php else: ?>
+                <tr>
+                    <th><label for="song_name"><?php _e('Name:'); ?></label></th>
+                    <td><input type="text" name="song_name" id="song_name" /></td>
+                </tr>
+                <tr>
+                    <th><label for="song_artist"><?php _e('Artist:'); ?></label></th>
+                    <td><input type="text" name="song_artist" id="song_artist" /></td>
+                </tr>
+<?php endif; ?>
+                <tr>
+                    <th><label for="timeslot_show"><?php _e('Show:'); ?></label></th>
+                    <td><select name="timeslot_show" id="timeslot_show">
+<?php foreach($shows as $show): ?>
+                        <option value="<?php echo $show->ID; ?>"><?php echo $show->show_name; ?></option>
+<?php endforeach; ?>
+                    </select></td>
+                </tr>
+                <tr>
+                    <th><label for="song_date"><?php _e('Time:'); ?></label></th>
+                    <td><input type="text" name="song_date" id="song_date" /> (<?php _e('leave blank for current time'); ?>)</td>
+                </tr>
+            </tbody>
+        </table>
+        <input type="hidden" name="action" value="add" />
+        <p class="submit"><input type="submit" name="submit" id="submit" class="button-primary" value="<?php _e('Add song'); ?>" /></p>
+    </form>
+<?php echo $archives; ?>
+</div>
